@@ -19,69 +19,53 @@ struct node{
 vector<node> graph;  
 queue<int> myqueue;
 int *ary;
-vector<int> pointed;
+vector<int> pointing;
 int count = 0;
 deque<int> path;
 int minimum;
+int start,end;
+vector<int> array;
+int depth = -1;
 
-void view(int start,int n, int end){
-  if( !graph[n].found ){
-    ary[n]--;
-    pointed[n]--;
-    cout << "pointed : ";
-    for(int i=0; i<10; i++){
-      cout << pointed[i] << " ";
+void view(int n){  
+  if(!graph[n].found){
+    graph[n].found = true;
+    depth++;
+    cout << "visiting : " << n << endl;
+    cout << "DEPTH : " << depth << endl;
+    if(depth == minimum && n == end){
+      count++;
     }
-    cout << endl;
-
-    cout << "visited : " << n << endl;
-    if(n!=start)
-      path.push_back(n);
-    
-    for(int i=0; i<graph[n].adj.size(); i++){
-      int tmp = graph[n].adj[i];
-      view(start,tmp, end);
-    }
-    if(n != end && ary[n] == 0 ){
-      graph[n].found = true;
-       cout << "FOUND : " << n << endl;
-    }
-    //cout<< "path size : " << path.size() << "  and minimum "<< minimum<<endl;
-    if(n == end){
-      if(path.size()==minimum)
-	count++;
-      int asd = path.front();
-      cout << "ASD : " << asd <<endl;
-      while(!path.empty()){
-	cout << path.front() << "  ";
-	path.pop_front();
-      }
-      cout << endl;
-      path.clear();
-      if(pointed[asd]>0){
-	pointed[asd]--;
-	path.push_front(asd);
+    else if (depth < minimum){
+      for(int i=0; i<graph[n].adj.size(); i++){
+	int tmp = graph[n].adj[i];
+	cout << "father : " << n << endl;
+	view(tmp);
       }
     }
+    depth--;
+    graph[n].found = false;
   }
 }
-
 
 
 int main(){
   ifstream in("input.txt");
   ofstream out("output.txt");
   
-  int nodes,archs,start,end;
+  int nodes,archs;
   in >> nodes >> archs >> start >> end;
   int tmp_ary[nodes];
   ary = tmp_ary;
   
   graph.resize(nodes);
-  pointed.resize(nodes);
+  pointing.resize(nodes);
+  array.resize(nodes);
   for(int i=0; i<nodes; i++){
     ary[i]=0;
-    pointed[i] = 0;
+    pointing[i] = 0;
+    array[i] = 0;
+    //graph[i].adj.resize(nodes);
   }
   for(int i=0; i<archs; i++){
     int index,val;
@@ -90,7 +74,8 @@ int main(){
     graph[index].erdos = 0;
     graph[val].erdos = 0;
     ary[val]++;
-    pointed[index]++;
+    pointing[index]++;
+    array[index]++;
   }
   
   // getting minimum path lenght
@@ -109,15 +94,17 @@ int main(){
     }
   }
   
+  cout << "pointed : ";
   for(int i=0; i<nodes; i++){
     graph[i].found = false;
-    //cout << ary[i] << " ";
+    cout << ary[i] << " ";
   }
-
+  cout << endl;
+    
   minimum = graph[end].erdos;
-  view(start,start, end);
-  cout << minimum <<endl;
-  out << minimum  << " " << count;
+  view(start);
+  
+  out << minimum << " " << count;
 
   return 0;
 }
