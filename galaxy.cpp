@@ -8,6 +8,7 @@ using namespace std;
 struct node{
   bool found;
   vector<int> adj;
+  node() : found(false){}
 };
 
 vector<node> graph;
@@ -34,6 +35,7 @@ int main(){
   for(int i=0; i<nodes; i++){
     if(graph[i].adj.size()==1){
       count++;
+      graph[i].found = true;
       kings[i] = 1;
     }
   }
