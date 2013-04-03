@@ -7,11 +7,18 @@ using namespace std;
 
 struct node{
   bool found;
+  int num;
   vector<int> adj;
   node() : found(false){}
 };
 
 vector<node> graph;
+vector<node> second;
+int number = 1;
+
+void cc(){
+  
+}
 
 
 int main(){
@@ -39,6 +46,13 @@ int main(){
       kings[i] = 1;
     }
   }
+
+  second = graph;
+  for(int i=0; i<nodes; i++){
+    second.erase(second.begin()+i);
+    second = graph;
+  }
+
   out << count << endl;
   for(int i=0; i< nodes; i++){
     if(kings[i]==1){
