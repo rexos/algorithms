@@ -22,22 +22,22 @@ int main(){
 
   in >> nodes >> archs;
   graph.resize(nodes);
-  int ary[nodes];
+  bool ary[nodes];
 
   for(int i=0; i<nodes; i++)
-    ary[i] = 0;
+    ary[i] = false;
 
   for(int i=0; i<archs; i++){
     int index,value;
     in >> index >> value;
     graph[index].adj.push_back(value);
-    ary[value]++;
+    ary[value] = true;
   }
 
   int max = 0;
 
   for(int i=0; i< nodes; i++){
-    if(ary[i] == 0){
+    if(!ary[i]){
       myqueue.push(i);
       graph[i].erdos = 0;
       while(!myqueue.empty()){
@@ -45,10 +45,11 @@ int main(){
 	myqueue.pop();
 	for(int j=0; j<graph[cur].adj.size(); j++){
 	  int tmp = graph[cur].adj[j];
+	  if(graph[cur].erdos + 1 > graph[tmp].erdos)
+	    myqueue.push(tmp);
 	  graph[tmp].erdos = graph[cur].erdos + 1;
 	  if(graph[tmp].erdos > max)
 	    max = graph[tmp].erdos;
-	  myqueue.push(tmp);
 	}
       }
     }
