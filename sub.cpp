@@ -37,6 +37,6 @@ int main(){
 
 
 
-  out << "yayyyhhhh!!";
+  out << max;
   return 0;
 }
